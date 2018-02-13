@@ -1,4 +1,4 @@
-package cs.csbu.cs540.finalexam;
+package us.csbu.cs540.finalexam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class Car implements Cloneable {
 		
 		int myKey = 1234;
 		HashMap<Integer, String> myHashMap = new HashMap<Integer, String>();
-		myHashMap.put(key, "Value");
+		myHashMap.put(myKey, "Value");
 	}
 }
 

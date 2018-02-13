@@ -33,7 +33,10 @@ public class Anagram
 	}
 	
 	public static void main(String args[]){
+		System.out.println (isAnagram("rtas", "rats"));
 		System.out.println (isAnagram("stae", "rats"));
+		System.out.println (isAnagram("hello", "elowl"));
+		System.out.println (isAnagram("hello", "olleh"));
 	}
 
 }

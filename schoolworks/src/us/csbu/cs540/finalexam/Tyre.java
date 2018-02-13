@@ -1,4 +1,4 @@
-package cs.csbu.cs540.finalexam;
+package us.csbu.cs540.finalexam;
 
 
 public class Tyre {
