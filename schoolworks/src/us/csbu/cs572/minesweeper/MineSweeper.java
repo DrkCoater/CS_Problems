@@ -3,6 +3,8 @@ package us.csbu.cs572.minesweeper;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.Random;
 
@@ -13,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -126,6 +130,7 @@ public class MineSweeper extends JFrame {
 	 * @param neighborMinesCount
 	 */
 	public static void updateTileUi(int x, int y, boolean isMine, int neighborMinesCount) {
+		// TODO: re-factor this to a non-static method
 		URL url;
 		if (isMine) {
 			url = MineSweeper.class.getResource("/mine.jpg");
@@ -171,6 +176,7 @@ public class MineSweeper extends JFrame {
 	private void createBoard(final Container pane) {
 		MineSweeper.board = new JButton[this.width][this.height];
 		Random r = new Random();
+		MineSweeper self = this;
 		int totalTiles = this.width * this.height;
 		int totalMines = (int) Math.ceil(totalTiles * percentOfMines);
 		for (int i = this.height - 1; i >= 0; i--) {
@@ -180,6 +186,13 @@ public class MineSweeper extends JFrame {
 				JButton btn = new JButton();
 				btn.setActionCommand(tile.getId());
 				btn.addActionListener(this.tileController);
+				btn.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						if (SwingUtilities.isRightMouseButton(e)) {
+							self.tileController.flagMine(tile.getId());
+						}
+					}
+				});
 				btn.setPreferredSize(new Dimension(40, 40));
 				btn.setIcon(new ImageIcon(this.getClass().getResource("/initial.jpg")));
 				MineSweeper.board[i][j] = btn;
@@ -199,6 +212,7 @@ public class MineSweeper extends JFrame {
 		this.canvas.setPreferredSize(new Dimension(width * 60, height * 60));
 		this.setSize(width * 60, height * 60);
 		this.canvas.setLayout(new GridLayout(this.width, this.height));
+		TileModel.reset();
 		MineSweeper.board = null;
 		this.createBoard(this.getContentPane());
 	}
@@ -209,6 +223,23 @@ public class MineSweeper extends JFrame {
 
 	public int getBoardHeight() {
 		return this.height;
+	}
+
+	public void setFlagUi(boolean flagged, int x, int y) {
+		if (flagged) {
+			MineSweeper.board[x][y].setIcon(new ImageIcon(this.getClass().getResource("/flag.jpg")));
+		} else {
+			MineSweeper.board[x][y].setIcon(new ImageIcon(this.getClass().getResource("/initial.jpg")));
+		}
+	}
+
+	public void gameOver() {
+		JOptionPane.showMessageDialog(null, "Boooooom!!! Game Over.");
+		this.resetBoard(this.width, this.height, this.percentOfMines);
+	}
+
+	public void gameWon() {
+		JOptionPane.showMessageDialog(null, "Congratulations! You Won.");
 	}
 
 	/**

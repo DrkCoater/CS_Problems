@@ -11,9 +11,15 @@ public class TileModel {
 
 	private static HashMap<String, TileModel> tiles;
 
+	private static int totalMines = 0;
+
+	private static int totalExposed = 0;
+
 	private boolean exposed;
 
 	private boolean isMine;
+
+	private boolean flagged;
 
 	private HashMap<String, Integer> coordinate;
 
@@ -29,6 +35,16 @@ public class TileModel {
 		this.coordinate.put("x", x);
 		this.coordinate.put("y", y);
 		this.isMine = isMine;
+		if (this.isMine) {
+			TileModel.totalMines++;
+		}
+	}
+
+	public static void reset() {
+		TileModel.totalMines = 0;
+		TileModel.totalExposed = 0;
+		TileModel.tiles = null;
+		TileModel.tiles = new HashMap<String, TileModel>();
 	}
 
 	/**
@@ -63,6 +79,37 @@ public class TileModel {
 	 */
 	public void expose() {
 		this.exposed = true;
+		TileModel.totalExposed++;
+	}
+
+	/**
+	 * check the winning status on every move
+	 * 
+	 * @return {boolean}
+	 */
+	public boolean winCheck() {
+		int totalTiles = TileModel.tiles.size();
+		return totalTiles - TileModel.totalExposed == TileModel.totalMines;
+	}
+
+	/**
+	 * Is flagged
+	 * 
+	 * @return boolean
+	 */
+	public boolean isFlagged() {
+		return this.flagged;
+	}
+
+	/**
+	 * Toggle flag status on a tile
+	 */
+	public void toggleFlag() {
+		if (this.flagged) {
+			this.flagged = false;
+		} else {
+			this.flagged = true;
+		}
 	}
 
 	/**
