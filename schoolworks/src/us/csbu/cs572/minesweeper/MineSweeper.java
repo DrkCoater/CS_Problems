@@ -223,7 +223,6 @@ public class MineSweeper extends JFrame {
 		this.canvas.setPreferredSize(new Dimension(width * 60, height * 60));
 		this.setSize(width * 60, height * 60);
 		this.canvas.setLayout(new GridLayout(this.width, this.height));
-		MineSweeper.board = null;
 		TileModel.reset(); // reset tile model
 		this.createBoard(this.getContentPane()); // recreate board
 	}
@@ -264,16 +263,13 @@ public class MineSweeper extends JFrame {
 	/**
 	 * Game Over
 	 */
-	public void gameOver() {
-		JOptionPane.showMessageDialog(null, "Boooooom!!! Game Over.");
+	public void gameOver(boolean isWon) {
+		String resultMsg = "Boooooom!!! Game Over.";
+		if (isWon) {
+			resultMsg = "Congratulations! You Won.";
+		}
+		JOptionPane.showMessageDialog(null, resultMsg);
 		this.resetBoard(this.width, this.height, this.percentOfMines);
-	}
-
-	/**
-	 * Game Won display result
-	 */
-	public void gameWon() {
-		JOptionPane.showMessageDialog(null, "Congratulations! You Won.");
 	}
 
 	/**

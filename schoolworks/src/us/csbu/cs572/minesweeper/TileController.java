@@ -36,7 +36,7 @@ public class TileController implements ActionListener {
 		this.mineSweeperUi.updateTileUi(tile, neighborMines);
 		tile.expose();
 		if (tile.winCheck()) {
-			this.mineSweeperUi.gameWon();
+			this.mineSweeperUi.gameOver(true);
 		}
 		if (neighborMines > 0 || tile.isMine()) {
 			return; // we are done here
@@ -114,7 +114,7 @@ public class TileController implements ActionListener {
 		TileModel tile = TileModel.getTileById(e.getActionCommand());
 		if (tile.isMine()) {
 			this.mineSweeperUi.updateTileUi(tile, 0);
-			this.mineSweeperUi.gameOver();
+			this.mineSweeperUi.gameOver(false);
 			return;
 		}
 		explore(tile);

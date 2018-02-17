@@ -43,7 +43,6 @@ public class TileModel {
 	public static void reset() {
 		TileModel.totalMines = 0;
 		TileModel.totalExposed = 0;
-		TileModel.tiles = null;
 		TileModel.tiles = new HashMap<String, TileModel>();
 	}
 
