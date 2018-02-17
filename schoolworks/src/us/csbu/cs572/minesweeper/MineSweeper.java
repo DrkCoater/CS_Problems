@@ -10,6 +10,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -43,7 +46,11 @@ public class MineSweeper extends JFrame {
 	 */
 	private double percentOfMines;
 
-	private TileController controller;
+	private TileController tileController;
+
+	private MenuController menuController;
+
+	private JPanel canvas;
 
 	/**
 	 * Constructor
@@ -53,11 +60,46 @@ public class MineSweeper extends JFrame {
 	 */
 	public MineSweeper(String name, int width, int height, double percentOfMines) {
 		super(name);
-		setResizable(false);
+		this.setResizable(false);
 		this.width = width;
 		this.height = height;
 		this.percentOfMines = percentOfMines;
-		this.controller = new TileController(this.width, this.height);
+		this.tileController = new TileController(this);
+		this.menuController = new MenuController(this);
+		// setup menu
+		this.setupMenu();
+		this.canvas = new JPanel();
+		this.canvas.setPreferredSize(new Dimension(width * 60, height * 60));
+		this.canvas.setLayout(new GridLayout(this.width, this.height));
+	}
+
+	private void setupMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Mine Sweeper");
+
+		JMenuItem newGameBeginnerMenuItem = new JMenuItem("New Game -- Beginner (5x5)");
+		newGameBeginnerMenuItem.addActionListener(menuController);
+		newGameBeginnerMenuItem.setActionCommand("new-beginner");
+		menu.add(newGameBeginnerMenuItem);
+
+		JMenuItem newGameIntermediateMenuItem = new JMenuItem("New Game -- Intermediate (10x10)");
+		newGameIntermediateMenuItem.setActionCommand("new-intermediate");
+		newGameIntermediateMenuItem.addActionListener(menuController);
+		menu.add(newGameIntermediateMenuItem);
+
+		JMenuItem newGameAdvancedMenuItem = new JMenuItem("New Game -- Advanced (20x20)");
+		newGameAdvancedMenuItem.addActionListener(menuController);
+		newGameAdvancedMenuItem.setActionCommand("new-advanced");
+		menu.add(newGameAdvancedMenuItem);
+		menu.addSeparator();
+
+		JMenuItem exitMenuItem = new JMenuItem("Exit");
+		exitMenuItem.addActionListener(this.menuController);
+		exitMenuItem.setActionCommand("exit");
+		menu.add(exitMenuItem);
+		menuBar.add(menu);
+
+		this.setJMenuBar(menuBar);
 	}
 
 	/**
@@ -129,9 +171,6 @@ public class MineSweeper extends JFrame {
 	private void createBoard(final Container pane) {
 		MineSweeper.board = new JButton[this.width][this.height];
 		Random r = new Random();
-		final JPanel jPanel = new JPanel();
-		GridLayout gridLayout = new GridLayout(this.width, this.height);
-		jPanel.setLayout(gridLayout);
 		int totalTiles = this.width * this.height;
 		int totalMines = (int) Math.ceil(totalTiles * percentOfMines);
 		for (int i = this.height - 1; i >= 0; i--) {
@@ -140,13 +179,36 @@ public class MineSweeper extends JFrame {
 				TileModel.save(tile);
 				JButton btn = new JButton();
 				btn.setActionCommand(tile.getId());
-				btn.addActionListener(this.controller);
+				btn.addActionListener(this.tileController);
 				btn.setPreferredSize(new Dimension(40, 40));
+				btn.setIcon(new ImageIcon(this.getClass().getResource("/initial.jpg")));
 				MineSweeper.board[i][j] = btn;
-				jPanel.add(MineSweeper.board[i][j], i, j);
+				this.canvas.add(MineSweeper.board[i][j], i, j);
 			}
 		}
-		pane.add(jPanel);
+		pane.add(this.canvas);
+	}
+
+	public void resetBoard(int width, int height, double minePercentage) {
+		this.width = width;
+		this.height = height;
+		this.percentOfMines = minePercentage;
+		this.canvas.removeAll();
+		this.canvas.revalidate();
+		this.canvas.repaint();
+		this.canvas.setPreferredSize(new Dimension(width * 60, height * 60));
+		this.setSize(width * 60, height * 60);
+		this.canvas.setLayout(new GridLayout(this.width, this.height));
+		MineSweeper.board = null;
+		this.createBoard(this.getContentPane());
+	}
+
+	public int getBoardWidth() {
+		return this.width;
+	}
+
+	public int getBoardHeight() {
+		return this.height;
 	}
 
 	/**

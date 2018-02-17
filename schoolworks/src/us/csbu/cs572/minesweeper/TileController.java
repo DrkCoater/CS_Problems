@@ -10,15 +10,7 @@ import java.awt.event.ActionListener;
  */
 public class TileController implements ActionListener {
 
-	/**
-	 * board width for boundary checks
-	 */
-	private int width;
-
-	/**
-	 * board height for boundary checks
-	 */
-	private int height;
+	MineSweeper mineSweeperUi;
 
 	/**
 	 * class constructor
@@ -26,9 +18,8 @@ public class TileController implements ActionListener {
 	 * @param width
 	 * @param height
 	 */
-	public TileController(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public TileController(MineSweeper ms) {
+		this.mineSweeperUi = ms;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -49,35 +40,35 @@ public class TileController implements ActionListener {
 		}
 		// if there is no mine in all neighbors, explore each directions until mine
 		// count is non-zero
-		if (x - 1 >= 0 && y + 1 < width) {
+		if (x - 1 >= 0 && y + 1 < this.mineSweeperUi.getBoardWidth()) {
 			// go north west
 			TileModel nextTile = TileModel.getTileByCoordinate(x - 1, y + 1);
 			if (!nextTile.isExplosed()) {
 				explore(nextTile);
 			}
 		}
-		if (y + 1 < width) {
+		if (y + 1 < this.mineSweeperUi.getBoardWidth()) {
 			// go north
 			TileModel nextTile = TileModel.getTileByCoordinate(x, y + 1);
 			if (!nextTile.isExplosed()) {
 				explore(nextTile);
 			}
 		}
-		if (x + 1 < height && y + 1 < width) {
+		if (x + 1 < this.mineSweeperUi.getBoardHeight() && y + 1 < this.mineSweeperUi.getBoardWidth()) {
 			// go north east
 			TileModel nextTile = TileModel.getTileByCoordinate(x + 1, y + 1);
 			if (!nextTile.isExplosed()) {
 				explore(nextTile);
 			}
 		}
-		if (x + 1 < height) {
+		if (x + 1 < this.mineSweeperUi.getBoardHeight()) {
 			// go east
 			TileModel nextTile = TileModel.getTileByCoordinate(x + 1, y);
 			if (!nextTile.isExplosed()) {
 				explore(nextTile);
 			}
 		}
-		if (x + 1 < height && y - 1 >= 0) {
+		if (x + 1 < this.mineSweeperUi.getBoardHeight() && y - 1 >= 0) {
 			// go south east
 			TileModel nextTile = TileModel.getTileByCoordinate(x + 1, y - 1);
 			if (!nextTile.isExplosed()) {
