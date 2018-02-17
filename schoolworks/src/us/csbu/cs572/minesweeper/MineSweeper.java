@@ -77,6 +77,9 @@ public class MineSweeper extends JFrame {
 		this.canvas.setLayout(new GridLayout(this.width, this.height));
 	}
 
+	/**
+	 * Create UI menu items
+	 */
 	private void setupMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Mine Sweeper");
@@ -129,10 +132,11 @@ public class MineSweeper extends JFrame {
 	 * @param isMine
 	 * @param neighborMinesCount
 	 */
-	public static void updateTileUi(int x, int y, boolean isMine, int neighborMinesCount) {
-		// TODO: re-factor this to a non-static method
+	public void updateTileUi(TileModel tile, int neighborMinesCount) {
 		URL url;
-		if (isMine) {
+		int x = tile.getCoordinate().get("x");
+		int y = tile.getCoordinate().get("y");
+		if (tile.isMine()) {
 			url = MineSweeper.class.getResource("/mine.jpg");
 		} else {
 			switch (neighborMinesCount) {
@@ -202,6 +206,13 @@ public class MineSweeper extends JFrame {
 		pane.add(this.canvas);
 	}
 
+	/**
+	 * Reset game board
+	 * 
+	 * @param width
+	 * @param height
+	 * @param minePercentage
+	 */
 	public void resetBoard(int width, int height, double minePercentage) {
 		this.width = width;
 		this.height = height;
@@ -212,19 +223,36 @@ public class MineSweeper extends JFrame {
 		this.canvas.setPreferredSize(new Dimension(width * 60, height * 60));
 		this.setSize(width * 60, height * 60);
 		this.canvas.setLayout(new GridLayout(this.width, this.height));
-		TileModel.reset();
 		MineSweeper.board = null;
-		this.createBoard(this.getContentPane());
+		TileModel.reset(); // reset tile model
+		this.createBoard(this.getContentPane()); // recreate board
 	}
 
+	/**
+	 * Get board width
+	 * 
+	 * @return {int}
+	 */
 	public int getBoardWidth() {
 		return this.width;
 	}
 
+	/**
+	 * get board height
+	 * 
+	 * @return {int}
+	 */
 	public int getBoardHeight() {
 		return this.height;
 	}
 
+	/**
+	 * update flag on UI
+	 * 
+	 * @param flagged
+	 * @param x
+	 * @param y
+	 */
 	public void setFlagUi(boolean flagged, int x, int y) {
 		if (flagged) {
 			MineSweeper.board[x][y].setIcon(new ImageIcon(this.getClass().getResource("/flag.jpg")));
@@ -233,11 +261,17 @@ public class MineSweeper extends JFrame {
 		}
 	}
 
+	/**
+	 * Game Over
+	 */
 	public void gameOver() {
 		JOptionPane.showMessageDialog(null, "Boooooom!!! Game Over.");
 		this.resetBoard(this.width, this.height, this.percentOfMines);
 	}
 
+	/**
+	 * Game Won display result
+	 */
 	public void gameWon() {
 		JOptionPane.showMessageDialog(null, "Congratulations! You Won.");
 	}

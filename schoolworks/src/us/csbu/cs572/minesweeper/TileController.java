@@ -33,7 +33,7 @@ public class TileController implements ActionListener {
 		int y = tile.getCoordinate().get("y");
 		int neighborMines = tile.getNeighborMinesCount();
 		// update current UI first
-		MineSweeper.updateTileUi(x, y, tile.isMine(), neighborMines);
+		this.mineSweeperUi.updateTileUi(tile, neighborMines);
 		tile.expose();
 		if (tile.winCheck()) {
 			this.mineSweeperUi.gameWon();
@@ -113,7 +113,7 @@ public class TileController implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		TileModel tile = TileModel.getTileById(e.getActionCommand());
 		if (tile.isMine()) {
-			MineSweeper.updateTileUi(tile.getCoordinate().get("x"), tile.getCoordinate().get("y"), tile.isMine(), 0);
+			this.mineSweeperUi.updateTileUi(tile, 0);
 			this.mineSweeperUi.gameOver();
 			return;
 		}
