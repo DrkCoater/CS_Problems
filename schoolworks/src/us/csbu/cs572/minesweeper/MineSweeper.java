@@ -84,21 +84,24 @@ public class MineSweeper extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Mine Sweeper");
 
-		JMenuItem newGameBeginnerMenuItem = new JMenuItem("New Game -- Beginner (5x5)");
+		JMenu submenu = new JMenu("New Game");
+
+		JMenuItem newGameBeginnerMenuItem = new JMenuItem("Beginner (5x5)");
 		newGameBeginnerMenuItem.addActionListener(menuController);
 		newGameBeginnerMenuItem.setActionCommand("new-beginner");
-		menu.add(newGameBeginnerMenuItem);
+		submenu.add(newGameBeginnerMenuItem);
 
-		JMenuItem newGameIntermediateMenuItem = new JMenuItem("New Game -- Intermediate (10x10)");
+		JMenuItem newGameIntermediateMenuItem = new JMenuItem("Intermediate (10x10)");
 		newGameIntermediateMenuItem.setActionCommand("new-intermediate");
 		newGameIntermediateMenuItem.addActionListener(menuController);
-		menu.add(newGameIntermediateMenuItem);
+		submenu.add(newGameIntermediateMenuItem);
 
-		JMenuItem newGameAdvancedMenuItem = new JMenuItem("New Game -- Advanced (20x20)");
+		JMenuItem newGameAdvancedMenuItem = new JMenuItem("Advanced (20x20)");
 		newGameAdvancedMenuItem.addActionListener(menuController);
 		newGameAdvancedMenuItem.setActionCommand("new-advanced");
-		menu.add(newGameAdvancedMenuItem);
-		menu.addSeparator();
+		submenu.add(newGameAdvancedMenuItem);
+
+		menu.add(submenu);
 
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
 		exitMenuItem.addActionListener(this.menuController);
